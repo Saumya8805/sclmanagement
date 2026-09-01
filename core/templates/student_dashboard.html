@@ -1,4 +1,24 @@
-<h2>Welcome, {{ student.user.username }}</h2>
-<p>Roll No: {{ student.roll_no }}</p>
-<a href="/report/{{ student.id }}/">View Report Card</a>
-<a href="/attendance/">View Attendance</a>
+
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-primary">Welcome, {{ student.user.username }}</h2>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card border-primary mb-3">
+                <div class="card-header bg-primary text-white">Your Details</div>
+                <div class="card-body">
+                    <p><strong>Roll No:</strong> {{ student.roll_no }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-warning mb-3">
+                <div class="card-header bg-warning text-dark">Quick Links</div>
+                <div class="card-body">
+                    <a href="/report/{{ student.id }}/" class="btn btn-success">View Report Card</a>
+                    <a href="/attendance/" class="btn btn-danger">View Attendance</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

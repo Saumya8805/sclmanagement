@@ -4,6 +4,7 @@ from .models import Exam, Result
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 # Create your views here.
@@ -63,18 +64,34 @@ def teachers(request):
 
 
 #### push the classroom data 
+
+@login_required
 def classes(request):
-    classes_list = ClassRoom.objects.all()
+    user = request.user
+    if hasattr(user, 'teacherprofile'):
+        # Teacher sees only their classes
+        classes_list = ClassRoom.objects.filter(teacher=user.teacherprofile)
+    else:
+        # Admin sees all classes
+        classes_list = ClassRoom.objects.all()
     return render(request, 'classes.html', {'classes': classes_list})
 
 
-
-
-
 ### to store attendance of childerns
+@login_required
 def attendance(request):
-    attendance_list = Attendance.objects.all().order_by('-date')
+    user = request.user
+    if hasattr(user, 'studentprofile'):
+        # Student sees only their own attendance
+        attendance_list = Attendance.objects.filter(student=user.studentprofile)
+    elif hasattr(user, 'teacherprofile'):
+        # Teacher sees attendance for their classes
+        attendance_list = Attendance.objects.filter(student__class_room__teacher=user.teacherprofile)
+    else:
+        # Admin sees all
+        attendance_list = Attendance.objects.all()
     return render(request, 'attendance.html', {'attendance': attendance_list})
+
 
 
 
@@ -89,9 +106,114 @@ def exams(request):
 
 
 
-def report_card(request):
-    return HttpResponse('Report card section')
+def user_logout(request):
+    logout(request)
+    return redirect('login')
 
 
 
+
+
+
+
+
+@login_required
+def report_card(request, student_id):
+    user = request.user
+    student = get_object_or_404(Student, id=student_id)
+
+    # Restrict: student can only view their own report
+    if hasattr(user, 'studentprofile') and student.id != user.studentprofile.id:
+        return HttpResponse("Unauthorized", status=403)
+
+    results = Result.objects.filter(student=student)
+    return render(request, 'report_card.html', {
+        'student': student,
+        'results': results
+    })
+
+
+
+
+from django.contrib.auth.models import User
+from .forms import StudentRegistrationForm, TeacherRegistrationForm
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+from .forms import StudentRegistrationForm
+
+def student_register(request):
+    if request.method == "POST":
+        form = StudentRegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password']
+            )
+            student = form.save(commit=False)
+            student.user = user
+            student.save()
+
+            # Auto login
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = StudentRegistrationForm()
+    return render(request, 'student_register.html', {'form': form})
+
+
+
+def teacher_register(request):
+    if request.method == "POST":
+        form = TeacherRegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
+            teacher = form.save(commit=False)
+            teacher.user = user
+            teacher.save()
+            return redirect('login')
+    else:
+        form = TeacherRegistrationForm()
+    return render(request, 'teacher_register.html', {'form': form})
+
+
+
+from django.contrib.auth.decorators import login_required
+from .forms import StudentRegistrationForm, TeacherRegistrationForm
+
+@login_required
+def student_profile(request):
+    if not hasattr(request.user, 'studentprofile'):
+        return HttpResponse("This account is not linked to a student profile.", status=403)
+
+    student = request.user.studentprofile
+    if request.method == "POST":
+        form = StudentRegistrationForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = StudentRegistrationForm(instance=student)
+    return render(request, 'student_profile.html', {'form': form})
+
+
+@login_required
+def teacher_profile(request):
+    teacher = request.user.teacherprofile
+    if request.method == "POST":
+        form = TeacherRegistrationForm(request.POST, instance=teacher)
+        if form.is_valid():
+            form.save()
+            return redirect('dashboard')
+    else:
+        form = TeacherRegistrationForm(instance=teacher)
+    return render(request, 'teacher_profile.html', {'form': form})
 

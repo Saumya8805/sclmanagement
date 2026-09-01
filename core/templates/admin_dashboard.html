@@ -1,5 +1,38 @@
-<h2>Admin Dashboard</h2>
-<a href="/students/">Manage Students</a>
-<a href="/teachers/">Manage Teachers</a>
-<a href="/classes/">Manage Classes</a>
-<a href="/exams/">Manage Exams</a>
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-dark">Admin Dashboard</h2>
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card border-secondary mb-3">
+                <div class="card-header bg-secondary text-white">Manage Students</div>
+                <div class="card-body">
+                    <a href="/students/" class="btn btn-outline-light">Go</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-secondary mb-3">
+                <div class="card-header bg-secondary text-white">Manage Teachers</div>
+                <div class="card-body">
+                    <a href="/teachers/" class="btn btn-outline-light">Go</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-secondary mb-3">
+                <div class="card-header bg-secondary text-white">Manage Classes</div>
+                <div class="card-body">
+                    <a href="/classes/" class="btn btn-outline-light">Go</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card border-secondary mb-3">
+                <div class="card-header bg-secondary text-white">Manage Exams</div>
+                <div class="card-body">
+                    <a href="/exams/" class="btn btn-outline-light">Go</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
