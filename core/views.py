@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from .models import StudentProfile, TeacherProfile, ClassRoom
+
 
 
 # Create your views here.
@@ -216,4 +218,35 @@ def teacher_profile(request):
     else:
         form = TeacherRegistrationForm(instance=teacher)
     return render(request, 'teacher_profile.html', {'form': form})
+
+from django.db.models import Q
+
+def search(request):
+    query = request.GET.get('q')
+    students = teachers = None
+    if query:
+        students = StudentProfile.objects.filter(
+            Q(user__username__icontains=query) | Q(roll_no__icontains=query)
+        )
+        teachers = TeacherProfile.objects.filter(
+            Q(user__username__icontains=query) | Q(subject__icontains=query)
+        )
+    return render(request, 'search_results.html', {
+        'query': query,
+        'students': students,
+        'teachers': teachers
+    })
+
+
+
+
+
+def report_card(request, student_id):
+    student = get_object_or_404(StudentProfile, id=student_id)
+    results = Result.objects.filter(student=student)
+    return render(request, 'report_card.html', {
+        'student': student,
+        'results': results
+    })
+
 

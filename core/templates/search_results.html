@@ -1,0 +1,18 @@
+{% include 'navbar.html' %}
+
+
+ <a href="{% url 'report_card' student.user.id %}">
+{% for student in students %}
+    <li class="list-group-item">
+        {{ student.user.username }} (Roll No: {{ student.roll_no }})
+        {% if student.id %}
+            <a href="{% url 'report_card' student.id %}" class="btn btn-sm btn-outline-success float-end">View Report</a>
+        {% else %}
+            <span class="text-muted">No report available</span>
+        {% endif %}
+    </li>
+{% empty %}
+    <li class="list-group-item">No students found.</li>
+{% endfor %}
+
+
