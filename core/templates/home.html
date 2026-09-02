@@ -10,13 +10,7 @@
   <!-- to include nav bar from navbar.html -->
    {% include 'navbar.html' %}  
 
-   <!-- this div for creating search bar-->
-<div class="container mt-4">
-        <form method="get" action="{% url 'search' %}" class="d-flex">
-        <input class="form-control me-2" type="search" name="q" placeholder="Search students or teachers..." aria-label="Search">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-    </form>
-</div>
+
 
 <!-- All the cards-->
 <div class="container mt-5">
@@ -83,15 +77,16 @@
                 </div>
             </div>
         </div>
+
         
-       <!-- to add any thing new-->
+        <!-- to add any thing new-->
         <div class="col-md-4">
             <div class="card shadow-sm border-warning mb-4">
-                <div class="card-header bg-warning text-dark">to add new things</div>
+                <div class="card-header bg-warning text-dark">Library</div>
                 <div class="card-body text-center">
                     <i class="bi bi-person-badge-fill" style="font-size:2rem;"></i>
-                    <p class="mt-2">View something new</p>
-                    <a href="//" class="btn btn-outline-warning">Go</a>
+                    <p class="mt-2">Manage books and issue records</p>
+                    <a href="/library/" class="btn btn-outline-warning">Go</a>
                 </div>
                 </div>
             </div>

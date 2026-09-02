@@ -1,7 +1,7 @@
 <!-- To Show the result -->
 
 {% include 'navbar.html' %}
-<a href="{% url 'report_card' student.user.id %}">
+
 {% for student in students %}
     <li class="list-group-item">
         {{ student.user.username }} (Roll No: {{ student.roll_no }})
@@ -16,3 +16,4 @@
 {% endfor %}
 
 
+<a href="{% url 'report_card' student.user.id %}"></a>   

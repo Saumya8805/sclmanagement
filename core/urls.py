@@ -13,8 +13,10 @@ urlpatterns = [
     path('exams/', views.exams, name='exams'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.user_logout, name='logout'),
-    path('search/', views.search, name='search'),
+  path('library/', views.library, name='library'),
+
     path('report/<int:student_id>/', views.report_card, name='report_card'),
+    
 
 
 

@@ -118,38 +118,18 @@ def user_logout(request):
 
 
 # To  show the result of students
-@login_required
 def report_card(request, student_id):
-    user = request.user
-    student = get_object_or_404(Student, id=student_id)
-
-    # Restrict: student can only view their own report
-    if hasattr(user, 'studentprofile') and student.id != user.studentprofile.id:
-        return HttpResponse("Unauthorized", status=403)
-
+    student = get_object_or_404(StudentProfile, id=student_id)
     results = Result.objects.filter(student=student)
     return render(request, 'report_card.html', {
         'student': student,
         'results': results
     })
 
+def library(request):
+    return render(request, 'library.html')
 
-# for search
-def search(request):
-    query = request.GET.get('q')
-    students = teachers = None
-    if query:
-        students = StudentProfile.objects.filter(
-            Q(user__username__icontains=query) | Q(roll_no__icontains=query)
-        )
-        teachers = TeacherProfile.objects.filter(
-            Q(user__username__icontains=query) | Q(subject__icontains=query)
-        )
-    return render(request, 'search_results.html', {
-        'query': query,
-        'students': students,
-        'teachers': teachers
-    })
+
 
 
 
