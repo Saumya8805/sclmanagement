@@ -6,19 +6,19 @@
 </head>
 
 <body class="bg-dark">
-   
 
-<div class="container mt-5">
-</div>
-{% include 'navbar.html' %}<!-- to include nav bar from navbar.html -->
+  <!-- to include nav bar from navbar.html -->
+   {% include 'navbar.html' %}  
+
+   <!-- this div for creating search bar-->
 <div class="container mt-4">
-    <form method="get" action="{% url 'search' %}" class="d-flex">
+        <form method="get" action="{% url 'search' %}" class="d-flex">
         <input class="form-control me-2" type="search" name="q" placeholder="Search students or teachers..." aria-label="Search">
         <button class="btn btn-outline-primary" type="submit">Search</button>
     </form>
 </div>
 
-
+<!-- All the cards-->
 <div class="container mt-5">
     <h2 class="text-primary text-center mb-4">Welcome to School Management System</h2>
     <p class="text-center">Choose a section below:</p>
@@ -33,8 +33,9 @@
                     <p class="mt-2">Manage everything centrally</p>
                     <a href="/admin/" class="btn btn-outline-info">Go</a>
                 </div>
-            </div>
         </div>
+    </div>
+
         <!-- For student pannel-->
         <div class="col-md-4">
             <div class="card shadow-sm border-success mb-4">
@@ -46,6 +47,7 @@
                 </div>
             </div>
         </div>
+
       <!-- For Teacher pannel-->
         <div class="col-md-4">
             <div class="card shadow-sm border-warning mb-4">
@@ -57,7 +59,8 @@
                 </div>
             </div>
         </div>
-        <!--For-->
+
+        <!--For Exams and result -->
           <div class="col-md-4">
             <div class="card shadow-sm border-info mb-4">
                 <div class="card-header bg-info text-white">Exams & Results</div>
@@ -81,11 +84,8 @@
             </div>
         </div>
         
-       
-
-
-        <!-- to add any thing new-->
-             <div class="col-md-4">
+       <!-- to add any thing new-->
+        <div class="col-md-4">
             <div class="card shadow-sm border-warning mb-4">
                 <div class="card-header bg-warning text-dark">to add new things</div>
                 <div class="card-body text-center">
@@ -93,12 +93,10 @@
                     <p class="mt-2">View something new</p>
                     <a href="//" class="btn btn-outline-warning">Go</a>
                 </div>
+                </div>
             </div>
         </div>
-    </div>
-       
     </div>  
-
 </div>
 
 </body>

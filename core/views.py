@@ -6,6 +6,10 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .models import StudentProfile, TeacherProfile, ClassRoom
+from .forms import StudentRegistrationForm, TeacherRegistrationForm
+from django.db.models import Q
+from django.contrib.auth.models import User
+
 
 
 
@@ -96,7 +100,7 @@ def attendance(request):
 
 
 
-
+# to store the exams information
 def exams(request):
     exams_list = Exam.objects.all()
     results_list = Result.objects.all()
@@ -106,19 +110,14 @@ def exams(request):
     })
 
 
-
+# user can logout through this
 
 def user_logout(request):
     logout(request)
     return redirect('login')
 
 
-
-
-
-
-
-
+# To  show the result of students
 @login_required
 def report_card(request, student_id):
     user = request.user
@@ -135,92 +134,7 @@ def report_card(request, student_id):
     })
 
 
-
-
-from django.contrib.auth.models import User
-from .forms import StudentRegistrationForm, TeacherRegistrationForm
-
-
-
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import login
-from .forms import StudentRegistrationForm
-
-def student_register(request):
-    if request.method == "POST":
-        form = StudentRegistrationForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password']
-            )
-            student = form.save(commit=False)
-            student.user = user
-            student.save()
-
-            # Auto login
-            login(request, user)
-            return redirect('dashboard')
-    else:
-        form = StudentRegistrationForm()
-    return render(request, 'student_register.html', {'form': form})
-
-
-
-def teacher_register(request):
-    if request.method == "POST":
-        form = TeacherRegistrationForm(request.POST)
-        if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-                password=form.cleaned_data['password']
-            )
-            teacher = form.save(commit=False)
-            teacher.user = user
-            teacher.save()
-            return redirect('login')
-    else:
-        form = TeacherRegistrationForm()
-    return render(request, 'teacher_register.html', {'form': form})
-
-
-
-from django.contrib.auth.decorators import login_required
-from .forms import StudentRegistrationForm, TeacherRegistrationForm
-
-@login_required
-def student_profile(request):
-    if not hasattr(request.user, 'studentprofile'):
-        return HttpResponse("This account is not linked to a student profile.", status=403)
-
-    student = request.user.studentprofile
-    if request.method == "POST":
-        form = StudentRegistrationForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
-            return redirect('dashboard')
-    else:
-        form = StudentRegistrationForm(instance=student)
-    return render(request, 'student_profile.html', {'form': form})
-
-
-@login_required
-def teacher_profile(request):
-    teacher = request.user.teacherprofile
-    if request.method == "POST":
-        form = TeacherRegistrationForm(request.POST, instance=teacher)
-        if form.is_valid():
-            form.save()
-            return redirect('dashboard')
-    else:
-        form = TeacherRegistrationForm(instance=teacher)
-    return render(request, 'teacher_profile.html', {'form': form})
-
-from django.db.models import Q
-
+# for search
 def search(request):
     query = request.GET.get('q')
     students = teachers = None
@@ -240,13 +154,5 @@ def search(request):
 
 
 
-
-def report_card(request, student_id):
-    student = get_object_or_404(StudentProfile, id=student_id)
-    results = Result.objects.filter(student=student)
-    return render(request, 'report_card.html', {
-        'student': student,
-        'results': results
-    })
 
 

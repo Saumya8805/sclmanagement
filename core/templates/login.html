@@ -8,12 +8,9 @@
 
 <div class="container mt-5">
     <h2 class="text-primary">Login</h2>
-
     {% if error %}
         <div class="alert alert-danger">{{ error }}</div>
-
     {% endif %}
-
     <form method="post">
         {% csrf_token %}
         <div class="mb-3">
@@ -26,7 +23,6 @@
         </div>
         <button type="submit" class="btn btn-success">Login</button>
     </form>
-    
 </div>
 </body>
 </html>

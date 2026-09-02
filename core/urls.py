@@ -13,10 +13,6 @@ urlpatterns = [
     path('exams/', views.exams, name='exams'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('logout/', views.user_logout, name='logout'),
-    path('student-register/', views.student_register, name='student_register'),
-    path('teacher-register/', views.teacher_register, name='teacher_register'),
-    path('student-profile/', views.student_profile, name='student_profile'),
-    path('teacher-profile/', views.teacher_profile, name='teacher_profile'),
     path('search/', views.search, name='search'),
     path('report/<int:student_id>/', views.report_card, name='report_card'),
 
