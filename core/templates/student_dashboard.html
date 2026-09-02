@@ -1,0 +1,38 @@
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-primary">Student Dashboard</h2>
+    <p>Welcome, {{ request.user.username }}!</p>
+
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-info mb-4">
+                <div class="card-header bg-info text-white">Profile</div>
+                <div class="card-body text-center">
+                    <p>View and edit your profile</p>
+                    <a href="{% url 'student_profile' %}" class="btn btn-outline-info">Go</a>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-success mb-4">
+                <div class="card-header bg-success text-white">Attendance</div>
+                <div class="card-body text-center">
+                    <p>Check your attendance records</p>
+                    <a href="/attendance/" class="btn btn-outline-success">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-warning mb-4">
+                <div class="card-header bg-warning text-dark">Exams & Results</div>
+                <div class="card-body text-center">
+                    <p>View your exam results</p>
+                    <a href="/exams/" class="btn btn-outline-warning">Go</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

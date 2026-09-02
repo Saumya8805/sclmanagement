@@ -1,0 +1,9 @@
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-primary">Student Registration</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Register</button>
+    </form>
+</div>

@@ -96,8 +96,10 @@ class TeacherProfile(models.Model):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    roll_no = models.IntegerField(unique=True)
+    roll_no = models.CharField(max_length=20)
+    student_class = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
+
 

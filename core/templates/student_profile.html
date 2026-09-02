@@ -1,0 +1,9 @@
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-primary">My Profile</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Username:</strong> {{ student.user.username }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ student.user.email }}</li>
+        <li class="list-group-item"><strong>Roll No:</strong> {{ student.roll_no }}</li>
+    </ul>
+</div>

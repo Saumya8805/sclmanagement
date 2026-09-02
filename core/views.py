@@ -42,24 +42,17 @@ def user_login(request):
 
 @login_required
 def dashboard(request):
-    user = request.user
-    if hasattr(user, 'teacherprofile'):
-        # Teacher dashboard
-        return render(request, 'teacher_dashboard.html', {'teacher': user.teacherprofile})
-    elif hasattr(user, 'studentprofile'):
-        # Student dashboard
-        return render(request, 'student_dashboard.html', {'student': user.studentprofile})
-    else:
-        # Admin or generic user
-        return render(request, 'admin_dashboard.html')
+    return render(request, 'student_dashboard.html')
+
 
 
 
 ### push the data  student list
 
 def students(request):
-    students_list = Student.objects.all()
-    return render(request, 'students.html', {'students': students_list})
+    students = StudentProfile.objects.all()
+    return render(request, 'students.html', {'students': students})
+
 
 
 ### push the data into the teacher list
@@ -133,6 +126,32 @@ def library(request):
 
 
 
+def student_register(request):
+    if request.method == "POST":
+        form = StudentRegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
+            student = form.save(commit=False)
+            student.user = user
+            student.save()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = StudentRegistrationForm()
+    return render(request, 'student_register.html', {'form': form})
 
 
 
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import StudentProfile
+
+def student_profile(request):
+    student = get_object_or_404(StudentProfile, user=request.user)
+    return render(request, 'student_profile.html', {'student': student})
