@@ -9,6 +9,8 @@ from .models import StudentProfile, TeacherProfile, ClassRoom
 from .forms import StudentRegistrationForm, TeacherRegistrationForm
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404
+from .models import StudentProfile
 
 
 
@@ -79,19 +81,17 @@ def classes(request):
 ### to store attendance of childerns
 @login_required
 def attendance(request):
-    user = request.user
-    if hasattr(user, 'studentprofile'):
-        # Student sees only their own attendance
-        attendance_list = Attendance.objects.filter(student=user.studentprofile)
-    elif hasattr(user, 'teacherprofile'):
-        # Teacher sees attendance for their classes
-        attendance_list = Attendance.objects.filter(student__class_room__teacher=user.teacherprofile)
+    query = request.GET.get('q')  # if searching by name
+    if query:
+        student = StudentProfile.objects.filter(user__username__icontains=query).first()
+        if student:
+            records = Attendance.objects.filter(student=student)
+        else:
+            records = []
     else:
-        # Admin sees all
-        attendance_list = Attendance.objects.all()
-    return render(request, 'attendance.html', {'attendance': attendance_list})
+        records = Attendance.objects.all()
 
-
+    return render(request, 'attendance.html', {'records': records})
 
 # to store the exams information
 def exams(request):
@@ -119,13 +119,13 @@ def report_card(request, student_id):
         'results': results
     })
 
+#TO show the library management
 def library(request):
     return render(request, 'library.html')
 
 
 
-
-
+# for student register
 def student_register(request):
     if request.method == "POST":
         form = StudentRegistrationForm(request.POST)
@@ -145,13 +145,7 @@ def student_register(request):
     return render(request, 'student_register.html', {'form': form})
 
 
-
-
-
-
-from django.shortcuts import render, get_object_or_404
-from .models import StudentProfile
-
+# for student profile
 def student_profile(request):
     student = get_object_or_404(StudentProfile, user=request.user)
     return render(request, 'student_profile.html', {'student': student})
