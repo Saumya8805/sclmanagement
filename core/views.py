@@ -58,9 +58,18 @@ def students(request):
 
 
 ### push the data into the teacher list
+
+
+
 def teachers(request):
     teachers_list = Teacher.objects.all()
     return render(request, 'teachers.html', {'teachers': teachers_list})
+
+
+def teachers(request):
+    teachers = TeacherProfile.objects.all()
+    return render(request, 'teachers.html', {'teachers': teachers})
+
 
 
 
@@ -149,3 +158,91 @@ def student_register(request):
 def student_profile(request):
     student = get_object_or_404(StudentProfile, user=request.user)
     return render(request, 'student_profile.html', {'student': student})
+
+
+
+
+
+
+
+
+
+
+def teacher_dashboard(request):
+    return render(request, 'teacher_dashboard.html')
+
+
+def teacher_register(request):
+    if request.method == "POST":
+        form = TeacherRegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password']
+            )
+            teacher = form.save(commit=False)
+            teacher.user = user   # ✅ attach the user
+            teacher.save()
+            login(request, user)
+            return redirect('teacher_dashboard')
+    else:
+        form = TeacherRegistrationForm()
+    return render(request, 'teacher_register.html', {'form': form})
+
+
+
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from .models import StudentProfile, TeacherProfile
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            # ✅ Role detection
+            if hasattr(user, 'studentprofile'):
+                return redirect('dashboard')  # student dashboard
+            elif hasattr(user, 'teacherprofile'):
+                return redirect('teacher_dashboard')  # teacher dashboard
+            else:
+                return redirect('home')  # fallback
+        else:
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
+    return render(request, 'login.html')
+
+
+
+
+
+
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import redirect
+from .models import StudentProfile, TeacherProfile
+
+def user_login(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            # ✅ Role detection
+            if hasattr(user, 'studentprofile'):
+                return redirect('dashboard')  # student dashboard
+            elif hasattr(user, 'teacherprofile'):
+                return redirect('teacher_dashboard')  # teacher dashboard
+            else:
+                return redirect('home')  # fallback if neither role
+        else:
+            return render(request, 'login.html', {'error': 'Invalid credentials'})
+    return render(request, 'login.html')

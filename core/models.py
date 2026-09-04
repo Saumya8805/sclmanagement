@@ -86,6 +86,7 @@ class Result(models.Model):
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     subject = models.CharField(max_length=50)
+    phone = models.CharField(max_length=15, blank=True, null=True)
 
     def __str__(self):
         return self.user.username

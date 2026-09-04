@@ -9,30 +9,31 @@
 <body class="bg-light">
 <div class="container mt-5">
     <h2 class="text-success">Teachers List</h2>
-    <table class="table table-bordered table-striped mt-3">
-        <thead class="table-dark">
-            <tr>
-                <th>Name</th>
-                <th>Subject</th>
-                <th>Email</th>
-                <th>Phone</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for teacher in teachers %}
-            <tr>
-                <td>{{ teacher.name }}</td>
-                <td>{{ teacher.subject }}</td>
-                <td>{{ teacher.email }}</td>
-                <td>{{ teacher.phone }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No teachers found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Email</th>
+          
+        </tr>
+    </thead>
+    <tbody>
+        {% for teacher in teachers %}
+        <tr>
+            <td>{{ teacher.user.username }}</td>
+            <td>{{ teacher.subject }}</td>
+            <td>{{ teacher.user.email }}</td>
+          
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No teachers found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 </div>
 </body>
 </html>
